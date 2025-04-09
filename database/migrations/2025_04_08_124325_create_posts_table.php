@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string("title");
-            $table->text("desctiption");
-            $table->decimal("amount");
+            $table->text("description");
+            $table->decimal("price");
             $table->integer("views")->default(1);
+            $table->foreignId("user_id")->references("id")->on("users")->onDelete("cascade");
             $table->timestamps();
         });
     }

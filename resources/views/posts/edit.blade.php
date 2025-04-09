@@ -41,6 +41,7 @@
                             </div>
 
                             <input type="hidden" name="id" value="{{ $post->id }}">
+                            <input type="hidden" name="user_id" value="{{ $post->user_id }}" />
 
                             <button type="submit" class="btn btn-neutral w-full text-lg mt-4">Submit</button>
                         </fieldset>

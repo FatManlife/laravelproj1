@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -29,6 +30,7 @@ class PostController extends Controller
         ]);
 
         $post = Post::create([
+            "user_id" => Auth::user()->id,
             'title' => $validate['title'],
             'description' => $validate['description'],
             'price' => $validate['price']
@@ -61,11 +63,14 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         if ($post == null) return redirect()->route("posts.index.view");
+        if ($post->user_id != Auth::user()->id) return redirect()->route("posts.show.view", $id);
         return view("posts.edit", compact("post"));
     }
 
     public function update(Request $req,)
     {
+        if ($req->user_id != Auth::user()->id) return redirect()->route("posts.show.view", $req->id);
+
         $validate = $req->validate([
             'title' => "required|string|min:2|max:200",
             'description' => "required|string|min:2",
@@ -83,6 +88,11 @@ class PostController extends Controller
 
     public function destroy(int $id)
     {
+        $post = Post::find($id);
+
+        if ($post == null) return redirect()->route("posts.index.view");
+        if ($post->user_id != Auth::user()->id) return redirect()->route("posts.show.view", $id);
+
         Post::destroy($id);
         return redirect()->route("posts.index.view");
     }
